@@ -1,6 +1,8 @@
+import re
+
 def hash_data(data):
     hashes = [0, 0, 0, 0]
-	
+
     for i, x in enumerate(data.lower()):
         i = i % 4
         hashes[i] *= 0x1003F
@@ -52,17 +54,17 @@ def generate_pseudo_key(pkg, *, winners = False):
 def generate_sxs_name(pkg, *, winners = False):
     pseudo_key = generate_pseudo_key(pkg, winners=winners)
     sxs_name = []
-    
-    if len(pkg['name']) > 40:
-        name = pkg['name'][:19] + '..' + pkg['name'][-19:]
-    else:
-        name = pkg['name']
-    
+
+    name = re.sub(r'[^A-z0-9\-\._]', '', pkg['name'])
+
+    if len(name) > 40:
+        name = name[:19] + '..' + name[-19:]
+
     if len(pkg['culture']) > 8:
         culture = pkg['culture'][:3] + '..' + pkg['culture'][-3:]
     else:
         culture = pkg['culture']
-    
+
     sxs_name.append(pkg['processorArchitecture'])
     sxs_name.append(name)
     sxs_name.append(pkg['publicKeyToken'])
